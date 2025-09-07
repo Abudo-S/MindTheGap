@@ -7,13 +7,13 @@ import torch
 from sklearn.preprocessing import LabelEncoder
 
 class IntersentenceDataset(Dataset):
-    def __init__(self, tokenizer, args): 
+    def __init__(self, tokenizer, input_file="data/stereo_dataset.json", max_seq_length=128, batch_size=1): 
         self.tokenizer = tokenizer
-        filename = args.input_file
+        filename = input_file
         dataset = dataloader.StereoSet(filename)
         self.emp_max_seq_length = float("-inf")
-        self.max_seq_length = args.max_seq_length
-        self.batch_size = args.batch_size
+        self.max_seq_length = max_seq_length
+        self.batch_size = batch_size
 
         if self.tokenizer.__class__.__name__=="XLNetTokenizer":
             self.prepend_text = """ In 1991, the remains of Russian Tsar Nicholas II and his family

@@ -18,10 +18,10 @@ class LightTransformerModel(nn.Module):
         self.model = AutoModel.from_pretrained(model_name)
         #init adapter layers
         
-    def forward(self, input_ids, attention_mask):
+    def forward(self, input_ids, attention_mask, token_type_ids=None):
         #add adapter layers
 
-        outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)
+        outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
         return outputs
     
     #optimizer = AdamW(model.parameters(), lr=5e-5)

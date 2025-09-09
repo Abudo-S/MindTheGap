@@ -93,7 +93,7 @@ class IntrasentenceLoader(object):
             text = sentence
             text_pair = None
         tokens_dict = self.tokenizer.encode_plus(text, text_pair=text_pair, add_special_tokens=True, max_length=self.max_seq_length, \
-            pad_to_max_length=self.pad_to_max_length, return_token_type_ids=True, return_attention_mask=True, \
+            padding=self.pad_to_max_length, return_token_type_ids=True, return_attention_mask=True, \
             return_overflowing_tokens=False, return_special_tokens_mask=False)
         input_ids = tokens_dict['input_ids']
         attention_mask = tokens_dict['attention_mask']
@@ -243,6 +243,7 @@ class Label(object):
                          'anti-stereotype', 'unrelated', 'related']
         self.human_id = human_id
         self.label = label
+        self.label_id = ['stereotype','antistereotype', 'unrelated', 'related'].index(label)
 
 
 class IntrasentenceExample(Example):

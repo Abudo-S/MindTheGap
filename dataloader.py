@@ -243,7 +243,7 @@ class Label(object):
                          'anti-stereotype', 'unrelated', 'related']
         self.human_id = human_id
         self.label = label
-        self.label_id = ['stereotype','antistereotype', 'unrelated', 'related'].index(label)
+        self.label_id = ['stereotype','anti-stereotype', 'unrelated', 'related'].index(label)
 
 
 class IntrasentenceExample(Example):

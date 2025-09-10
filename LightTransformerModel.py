@@ -19,7 +19,14 @@ class LightTransformerModel(nn.Module):
         #init adapter layers
         
     def forward(self, input_ids, attention_mask, token_type_ids=None):
+        """
+        token_type_ids are used for NSP to separate between tokens within two sentences.
+        [Not used in RoBERTa, Albert and DistilBERT models]
+        """
         #add adapter layers
+
+        if self.model_name in ['roberta-base', 'albert-base-v2', 'distilbert-base-uncased']:
+            assert(token_type_ids is None)
 
         outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
         return outputs

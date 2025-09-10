@@ -92,12 +92,20 @@ class IntrasentenceLoader(object):
         else:
             text = sentence
             text_pair = None
-        tokens_dict = self.tokenizer.encode_plus(text, text_pair=text_pair, add_special_tokens=True, max_length=self.max_seq_length, \
-            padding=self.pad_to_max_length, return_token_type_ids=True, return_attention_mask=True, \
-            return_overflowing_tokens=False, return_special_tokens_mask=False)
+        # tokens_dict = self.tokenizer.encode_plus(text, text_pair=text_pair, add_special_tokens=True, max_length=self.max_seq_length, \
+        #     padding=self.pad_to_max_length, return_token_type_ids=True, return_attention_mask=True, \
+        #     return_overflowing_tokens=False, return_special_tokens_mask=False)
+
+        tokens_dict = self.tokenizer(
+            sentence,
+            padding='max_length',
+            truncation=True,
+            max_length=self.max_seq_length,
+            return_tensors="pt"
+        )
         input_ids = tokens_dict['input_ids']
         attention_mask = tokens_dict['attention_mask']
-        token_type_ids = tokens_dict['token_type_ids']
+        token_type_ids = tokens_dict['token_type_ids'] if self.tokenizer.__class__.__name__ == "BertTokenizer" else []
         return sentence_id, next_token, input_ids, attention_mask, token_type_ids 
          
 class StereoSet(object):

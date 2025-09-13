@@ -1,27 +1,27 @@
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForMaskedLM
 import torch
 import torch.nn as nn
 from tqdm.notebook import tqdm
 from sklearn.metrics import accuracy_score
 
-class LightTransformerModel(nn.Module):
+class AdaptedMLMTransformer(nn.Module):
     def __init__(self, model_name="roberta-base", save_path=None):
         """
         Initializes the LightTransformerModel with a specified transformer model.
         Suggested model names are 'distilbert-base-uncased', 'albert-base-v2', 'roberta-base'.
         """
 
-        super(LightTransformerModel, self).__init__()
+        super(AdaptedMLMTransformer, self).__init__()
         self.model_name = model_name
         self.save_path = save_path
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name)
+        self.model = AutoModelForMaskedLM.from_pretrained(model_name)
         #init adapter layers
         
     def forward(self, input_ids, attention_mask, token_type_ids=None):
         """
         token_type_ids are used for NSP to separate between tokens within two sentences.
-        [Not used in RoBERTa, Albert and DistilBERT models]
+        [token_type_ids in not used in RoBERTa, Albert and DistilBERT models]
         """
         #add adapter layers
 

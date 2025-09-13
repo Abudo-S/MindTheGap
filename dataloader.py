@@ -73,12 +73,12 @@ class IntrasentenceLoader(object):
         for cluster in clusters:
             for sentence in cluster.sentences:
                 insertion_tokens = self.tokenizer.encode(sentence.template_word, add_special_tokens=False)
-                for idx in range(len(insertion_tokens)):
-                    insertion = self.tokenizer.decode(insertion_tokens[:idx])
+                for idx in range(len(insertion_tokens)): #for any encoded token of the target word
+                    insertion = self.tokenizer.decode(insertion_tokens[:idx]) #except the last token since it will always be <mask> token
                     insertion_string = f"{insertion}{self.MASK_TOKEN}"
                     new_sentence = cluster.context.replace("BLANK", insertion_string)
                     # print(new_sentence, self.tokenizer.decode([insertion_tokens[idx]]))
-                    next_token = insertion_tokens[idx]
+                    next_token = insertion_tokens[idx] #ground truth token to predict
                     self.sentences.append((new_sentence, sentence.ID, next_token))
 
     def __len__(self):
@@ -97,7 +97,9 @@ class IntrasentenceLoader(object):
         #     return_overflowing_tokens=False, return_special_tokens_mask=False)
 
         tokens_dict = self.tokenizer(
-            sentence,
+            text,
+            text_pair=text_pair,
+            add_special_tokens=True,
             padding='max_length',
             truncation=True,
             max_length=self.max_seq_length,

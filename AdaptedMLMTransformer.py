@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 class AdaptedMLMTransformer(nn.Module):
     def __init__(self, model_name="roberta-base", save_path=None):
         """
-        Initializes the LightTransformerModel with a specified transformer model.
+        Initializes the AdaptedMLMTransformer with a specified transformer model.
         Suggested model names are 'distilbert-base-uncased', 'albert-base-v2', 'roberta-base'.
         """
 
@@ -18,17 +18,10 @@ class AdaptedMLMTransformer(nn.Module):
         self.model = AutoModelForMaskedLM.from_pretrained(model_name)
         #init adapter layers
         
-    def forward(self, input_ids, attention_mask, token_type_ids=None):
-        """
-        token_type_ids are used for NSP to separate between tokens within two sentences.
-        [token_type_ids in not used in RoBERTa, Albert and DistilBERT models]
-        """
-        #add adapter layers
+    def forward(self, input_ids, attention_mask):
+        #use adapter layers
 
-        if self.model_name in ['roberta-base', 'albert-base-v2', 'distilbert-base-uncased']:
-            assert(token_type_ids is None)
-
-        outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
+        outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)
         return outputs
     
     #optimizer = AdamW(model.parameters(), lr=5e-5)

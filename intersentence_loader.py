@@ -14,21 +14,7 @@ class IntersentenceDataset(Dataset):
         self.emp_max_seq_length = float("-inf")
         self.max_seq_length = max_seq_length
         self.batch_size = batch_size
-
-        if self.tokenizer.__class__.__name__=="XLNetTokenizer":
-            self.prepend_text = """ In 1991, the remains of Russian Tsar Nicholas II and his family
-		(except for Alexei and Maria) are discovered.
-		The voice of Nicholas's young son, Tsarevich Alexei Nikolaevich, narrates the
-		remainder of the story. 1883 Western Siberia,
-		a young Grigori Rasputin is asked by his father and a group of men to perform magic.
-		Rasputin has a vision and denounces one of the men as a horse thief. Although his
-		father initially slaps him for making such an accusation, Rasputin watches as the
-		man is chased outside and beaten. Twenty years later, Rasputin sees a vision of
-		the Virgin Mary, prompting him to become a priest. Rasputin quickly becomes famous,
-		with people, even a bishop, begging for his blessing. <eod> </s> <eos> """ 
-            self.prepend_text = None
-        else:
-            self.prepend_text = None
+        self.prepend_text = None
 
         intersentence_examples = dataset.get_intersentence_examples()
         
@@ -38,21 +24,22 @@ class IntersentenceDataset(Dataset):
             if self.prepend_text is not None:
                 context = self.prepend_text + context 
             for sentence in example.sentences:
-                # if self.tokenizer.__class__.__name__ in ["XLNetTokenizer", "RobertaTokenizer"]:
-                if self.tokenizer.__class__.__name__ in ["XLNetTokenizer", "RobertaTokenizer", "BertTokenizer"]:
-                    # support legacy pretrained NSP heads!
-                    input_ids, token_type_ids = self._tokenize(context, sentence.sentence)
-                    attention_mask = [1 for _ in input_ids] 
-                    self.preprocessed.append((input_ids, token_type_ids, attention_mask, sentence.ID))  
-                else:
-                    encoded_dict = self.tokenizer.encode_plus(text=context, text_pair=sentence.sentence, add_special_tokens=True, max_length=self.max_seq_length, truncation_strategy="longest_first", pad_to_max_length=False, return_tensors=None, return_token_type_ids=True, return_attention_mask=True, return_overflowing_tokens=False, return_special_tokens_mask=False) 
-                    # prior tokenization
-                    # input_ids, position_ids, attention_mask = self._tokenize(context, sentence)
+                #encoded_dict = self.tokenizer.encode_plus(text=context, text_pair=sentence.sentence, add_special_tokens=True, max_length=self.max_seq_length, truncation_strategy="longest_first", pad_to_max_length=False, return_tensors=None, return_token_type_ids=True, return_attention_mask=True, return_overflowing_tokens=False, return_special_tokens_mask=False) 
+                
+                encoded_dict = tokenizer(
+                    context,
+                    sentence.sentence,
+                    add_special_tokens=True,
+                    padding='max_length',
+                    truncation=True,
+                    max_length=self.max_seq_length,
+                    return_tensors="pt"
+                )
 
-                    input_ids = encoded_dict['input_ids']
-                    token_type_ids = encoded_dict['token_type_ids']
-                    attention_mask = encoded_dict['attention_mask']
-                    self.preprocessed.append((input_ids, token_type_ids, attention_mask, sentence.ID))
+                input_ids = encoded_dict['input_ids']
+                token_type_ids = encoded_dict['token_type_ids'] if self.tokenizer.__class__.__name__ == "BertTokenizer" else []
+                attention_mask = encoded_dict['attention_mask']
+                self.preprocessed.append((input_ids, token_type_ids, attention_mask, sentence.ID))
 
         print(f"Maximum sequence length found: {self.emp_max_seq_length}")
          

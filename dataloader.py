@@ -58,18 +58,6 @@ class IntrasentenceLoader(object):
         self.max_seq_length = max_seq_length
         self.pad_to_max_length = pad_to_max_length
 
-        if tokenizer.__class__.__name__=="XLNetTokenizer":
-            self.prepend_text = """In 1991, the remains of Russian Tsar Nicholas II and his family
-            (except for Alexei and Maria) are discovered.
-            The voice of Nicholas's young son, Tsarevich Alexei Nikolaevich, narrates the
-            remainder of the story. 1883 Western Siberia,
-            a young Grigori Rasputin is asked by his father and a group of men to perform magic.
-            Rasputin has a vision and denounces one of the men as a horse thief. Although his
-            father initially slaps him for making such an accusation, Rasputin watches as the
-            man is chased outside and beaten. Twenty years later, Rasputin sees a vision of
-            the Virgin Mary, prompting him to become a priest. Rasputin quickly becomes famous,
-            with people, even a bishop, begging for his blessing. <eod> """
-
         for cluster in clusters:
             for sentence in cluster.sentences:
                 insertion_tokens = self.tokenizer.encode(sentence.template_word, add_special_tokens=False)
@@ -86,19 +74,8 @@ class IntrasentenceLoader(object):
 
     def __getitem__(self, idx):
         sentence, sentence_id, next_token = self.sentences[idx]
-        if self.tokenizer.__class__.__name__=="XLNetTokenizer":
-            text = self.prepend_text
-            text_pair = sentence
-        else:
-            text = sentence
-            text_pair = None
-        # tokens_dict = self.tokenizer.encode_plus(text, text_pair=text_pair, add_special_tokens=True, max_length=self.max_seq_length, \
-        #     padding=self.pad_to_max_length, return_token_type_ids=True, return_attention_mask=True, \
-        #     return_overflowing_tokens=False, return_special_tokens_mask=False)
-
         tokens_dict = self.tokenizer(
-            text,
-            text_pair=text_pair,
+            sentence,
             add_special_tokens=True,
             padding='max_length',
             truncation=True,

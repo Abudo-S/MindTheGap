@@ -13,7 +13,7 @@ class AdaptedNSPTransformer(nn.Module):
         It shall be reduced in case of overfitting, and increased in case of underfitting.
         """
         super(AdaptedNSPTransformer, self).__init__()
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        #self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
         #init adapter layers
 

@@ -6,6 +6,11 @@ from torch.utils.data import Dataset, DataLoader
 import torch
 from sklearn.preprocessing import LabelEncoder
 
+#thresholds used to label intersentences
+INTERSENTENCE_STEREOTYPE_SCORE = 1e-5
+INTERSENTENCE_ANTISTEREOTYPE_SCORE = 0.999
+INTERSENTENCE_UNRELATED_SCORE = 0.50
+
 class IntersentenceDataset(Dataset):
     def __init__(self, tokenizer, input_file="data/stereo_dataset.json", max_seq_length=128, batch_size=1): 
         self.tokenizer = tokenizer
@@ -35,11 +40,19 @@ class IntersentenceDataset(Dataset):
                     max_length=self.max_seq_length,
                     return_tensors="pt"
                 )
+                
+                sentence_label = -1
+                if sentence.gold_label == 'stereotype':
+                    sentence_label = INTERSENTENCE_STEREOTYPE_SCORE
+                elif sentence.gold_label == 'anti-stereotype':
+                    sentence_label = INTERSENTENCE_ANTISTEREOTYPE_SCORE
+                else: #unrelated
+                    sentence_label = INTERSENTENCE_UNRELATED_SCORE
 
                 input_ids = encoded_dict['input_ids']
                 token_type_ids = encoded_dict['token_type_ids'] if self.tokenizer.__class__.__name__ == "BertTokenizer" else []
                 attention_mask = encoded_dict['attention_mask']
-                self.preprocessed.append((input_ids, token_type_ids, attention_mask, sentence.ID))
+                self.preprocessed.append((input_ids, token_type_ids, attention_mask, sentence.ID, sentence_label))
 
         print(f"Maximum sequence length found: {self.emp_max_seq_length}")
          
@@ -47,11 +60,11 @@ class IntersentenceDataset(Dataset):
         return len(self.preprocessed) 
 
     def __getitem__(self, idx):
-        input_ids, token_type_ids, attention_mask, sentence_id = self.preprocessed[idx]
+        input_ids, token_type_ids, attention_mask, sentence_id, sentence_label = self.preprocessed[idx]
         input_ids = torch.tensor(input_ids)
         token_type_ids = torch.tensor(token_type_ids)
         attention_mask = torch.tensor(attention_mask)
-        return input_ids, token_type_ids, attention_mask, sentence_id 
+        return input_ids, token_type_ids, attention_mask, sentence_id, sentence_label
 
     def _tokenize(self, context, sentence):
         # context = "Q: " + context

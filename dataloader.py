@@ -2,6 +2,11 @@ import json
 import string
 from tqdm import tqdm
 
+#thresholds used to label intrasentences
+INTRASENTENCE_STEREOTYPE_SCORE = 1e-5
+INTRASENTENCE_ANTISTEREOTYPE_SCORE = 0.999
+INTRASENTENCE_UNRELATED_SCORE = 0.50
+
 class SentimentIntrasentenceLoader(object):
     def __init__(self, tokenizer, max_seq_length=None, pad_to_max_length=False, input_file="../../data/bias.json"):
         stereoset = StereoSet(input_file)
@@ -67,13 +72,25 @@ class IntrasentenceLoader(object):
                     new_sentence = cluster.context.replace("BLANK", insertion_string)
                     # print(new_sentence, self.tokenizer.decode([insertion_tokens[idx]]))
                     next_token = insertion_tokens[idx] #ground truth token to predict
-                    self.sentences.append((new_sentence, sentence.ID, next_token))
+
+                    sentence_label = -1
+                    if sentence.gold_label == 'stereotype':
+                        sentence_label = INTRASENTENCE_STEREOTYPE_SCORE
+                    elif sentence.gold_label == 'anti-stereotype':
+                        sentence_label = INTRASENTENCE_ANTISTEREOTYPE_SCORE
+                    else: #unrelated
+                        sentence_label = INTRASENTENCE_UNRELATED_SCORE
+
+                    self.sentences.append((new_sentence, sentence.ID, next_token, sentence_label))
 
     def __len__(self):
         return len(self.sentences)  
 
     def __getitem__(self, idx):
-        sentence, sentence_id, next_token = self.sentences[idx]
+        '''
+        sentence_label is the score associated with each token to be predicted
+        '''
+        sentence, sentence_id, next_token, sentence_label = self.sentences[idx]
         tokens_dict = self.tokenizer(
             sentence,
             add_special_tokens=True,
@@ -85,7 +102,7 @@ class IntrasentenceLoader(object):
         input_ids = tokens_dict['input_ids']
         attention_mask = tokens_dict['attention_mask']
         token_type_ids = tokens_dict['token_type_ids'] if self.tokenizer.__class__.__name__ == "BertTokenizer" else []
-        return sentence_id, next_token, input_ids, attention_mask, token_type_ids 
+        return sentence_id, next_token, input_ids, attention_mask, token_type_ids, sentence_label
          
 class StereoSet(object):
     def __init__(self, location, json_obj=None):

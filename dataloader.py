@@ -53,10 +53,15 @@ class SentimentIntrasentenceLoader(object):
         token_type_ids = tokens_dict['token_type_ids']
         return sentence_id, input_ids, attention_mask, token_type_ids 
 
-class IntrasentenceLoader(object):
-    def __init__(self, tokenizer, max_seq_length=None, pad_to_max_length=False, input_file="../../data/bias.json"):
-        stereoset = StereoSet(input_file)
-        clusters = stereoset.get_intrasentence_examples()
+class IntrasentenceDataSet(object):
+    def __init__(self, tokenizer, max_seq_length=None, pad_to_max_length=False, examples=list(), input_file=None):
+        clusters = None
+        if input_file is not None:
+            stereoset = StereoSet(input_file)
+            clusters = stereoset.get_intrasentence_examples()
+        else:
+            clusters = examples
+            
         self.tokenizer = tokenizer
         self.sentences = []
         self.MASK_TOKEN = self.tokenizer.mask_token

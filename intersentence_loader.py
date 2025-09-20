@@ -12,16 +12,20 @@ INTERSENTENCE_ANTISTEREOTYPE_SCORE = 0.999
 INTERSENTENCE_UNRELATED_SCORE = 0.50
 
 class IntersentenceDataset(Dataset):
-    def __init__(self, tokenizer, input_file="data/stereo_dataset.json", max_seq_length=128, batch_size=1): 
+    def __init__(self, tokenizer, max_seq_length=128, examples=list(), input_file=None, batch_size=1): 
         self.tokenizer = tokenizer
         filename = input_file
-        dataset = dataloader.StereoSet(filename)
         self.emp_max_seq_length = float("-inf")
         self.max_seq_length = max_seq_length
         self.batch_size = batch_size
         self.prepend_text = None
 
-        intersentence_examples = dataset.get_intersentence_examples()
+        intersentence_examples = None
+        if input_file is not None:
+            stereoset = dataloader.StereoSet(filename)
+            intersentence_examples = stereoset.get_intersentence_examples()
+        else:
+            intersentence_examples = examples
         
         self.preprocessed = [] 
         for example in intersentence_examples:

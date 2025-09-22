@@ -5,13 +5,14 @@ import dataloader
 import json
 
 class ScoreEvaluator(object):
-    def __init__(self, gold_file_path, predictions_file_path):
+    def __init__(self, gold_file_path, predictions=None, predictions_file_path="data/stereo_dataset.json"):
         """
         Evaluates the results of a StereoSet predictions file with respect to the gold label file.
 
         Args:
             - gold_file_path: path, relative or absolute, to the gold file
             - predictions_file_path : path, relative or absolute, to the predictions file
+            - predictions: dictionary of predictions, if provided, predictions_file_path is ignored
 
         Returns:
             - overall, a dictionary of composite scores for intersentence and intrasentence
@@ -27,9 +28,11 @@ class ScoreEvaluator(object):
         self.example2sent = {}
         self.domain2example = {"intersentence": defaultdict(lambda: []), 
                                "intrasentence": defaultdict(lambda: [])}
-
-        with open(predictions_file_path) as f:
-            self.predictions = json.load(f)
+        if predictions:
+            self.predictions = predictions
+        else:
+            with open(predictions_file_path) as f:
+                self.predictions = json.load(f)
         
         for sent in self.predictions.get('intrasentence', []) + self.predictions.get('intersentence', []):
             self.id2score[sent['id']] = sent['score']

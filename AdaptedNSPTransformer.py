@@ -5,6 +5,7 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from tqdm.notebook import tqdm
 from intersentence_loader import IntersentenceDataset
+import os
 
 class AdaptedNSPTransformer(nn.Module):
     def __init__(self, model_name="roberta-base", save_path=None, num_labels=2):
@@ -19,12 +20,12 @@ class AdaptedNSPTransformer(nn.Module):
         self.model = AutoModelForSequenceClassification.from_pretrained(model_name, num_labels=num_labels)
         #init adapter layers
 
-        #Freeze pre-trained transformer parameters since we only want to train only the NSP head
-        #They won't be updated during backpropagation
+        #freeze pre-trained transformer parameters since we only want to train only the NSP head
+        #they won't be updated during backpropagation
         for param in self.model.parameters():
             param.requires_grad = False
         
-        #Unfreeze the classification head parameters
+        #unfreeze the classification head parameters to be trained
         for param in self.model.classifier.parameters():
             param.requires_grad = True
 
@@ -58,6 +59,7 @@ class AdaptedNSPTransformer(nn.Module):
         # for batch_num, batch in tqdm(train_loader, len(train_loader)):
         #     print(f"Batch size: {len(batch[0])}")
 
+        losses = []
         for input_ids, token_ids, attention_mask, sentence_ids, sentence_labels in train_loader:
             optimizer.zero_grad()
 
@@ -79,4 +81,26 @@ class AdaptedNSPTransformer(nn.Module):
             loss = loss_fn(predictions, true_labels)
             loss.backward()
             optimizer.step()
+            losses.append(loss.item())
+
+        return sum(losses) / len(losses)
+
+    def save_nsp_layer(self, target_path="saved_models/nsp_classification_layer.pt"):
+        classifier_state_dict = self.model.classifier.state_dict()
+
+        #save the state_dict
+        torch.save(classifier_state_dict, target_path)
+
+        print(f"Saved {self.model.__class__.__name__} classification layer to {target_path}")
+    
+    def load_nsp_layer(self, target_path="saved_models/nsp_classification_layer.pt"):
+        assert os.path.exists(target_path), f"Error: The path '{target_path}' does not exist."
+
+        #load the state_dict into the model's classification layer
+        state_dict = torch.load(target_path)
+        self.model.classifier.load_state_dict(state_dict)
+
+        print(f"Loaded {self.model.__class__.__name__} classification layer from {target_path}")
+    
+
 

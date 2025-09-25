@@ -7,6 +7,8 @@ from tqdm.notebook import tqdm
 from intersentence_loader import IntersentenceDataset
 import os
 
+LEARNING_RATE = 5e-5 #0.00005
+
 class AdaptedNSPTransformer(nn.Module):
     def __init__(self, model_name="roberta-base", save_path=None, num_labels=2):
         """
@@ -28,7 +30,7 @@ class AdaptedNSPTransformer(nn.Module):
         #unfreeze the classification head parameters to be trained
         for param in self.model.classifier.parameters():
             param.requires_grad = True
-
+        
     def forward(self, input_ids, attention_mask):
         """
         token_type_ids are used for NSP to separate between tokens within two sentences.
@@ -42,12 +44,13 @@ class AdaptedNSPTransformer(nn.Module):
     def train_epoch(self, 
                     train_dataset : IntersentenceDataset,
                     optimizer=None,
+                    lr_scheduler=None,
                     loss_fn= nn.MSELoss,
                     batch_size=5,
                     device=None):
         loss_fn = loss_fn()
         if optimizer is None:
-            optimizer = AdamW(self.model.parameters(), lr=5e-5) #0.00005
+            optimizer = AdamW(self.model.parameters(), lr=LEARNING_RATE)
 
         if device is None:
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -81,6 +84,10 @@ class AdaptedNSPTransformer(nn.Module):
             loss = loss_fn(predictions, true_labels)
             loss.backward()
             optimizer.step()
+
+            if lr_scheduler is not None:
+                lr_scheduler.step() #lr hypterparameter tuning during training
+
             losses.append(loss.item())
 
         return sum(losses) / len(losses)

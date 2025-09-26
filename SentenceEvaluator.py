@@ -253,7 +253,7 @@ class SentenceEvaluator():
     def evaluate(self, intra_targetModel=None, inter_targetModel=None, useTrainingSet=False):
         predictions = {}
         if not self.SKIP_INTERSENTENCE:
-            intersentence_predictions = self.evaluate_intersentence(intra_targetModel, useTrainingSet=useTrainingSet)
+            intersentence_predictions = self.evaluate_intersentence(inter_targetModel, useTrainingSet=useTrainingSet)
             predictions['intersentence'] = intersentence_predictions
 
         if not self.SKIP_INTRASENTENCE:

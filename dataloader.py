@@ -3,9 +3,11 @@ import string
 from tqdm import tqdm
 
 #thresholds used to label intrasentences
-INTRASENTENCE_STEREOTYPE_SCORE = 1e-5
-INTRASENTENCE_ANTISTEREOTYPE_SCORE = 0.999
-INTRASENTENCE_UNRELATED_SCORE = 0.50
+#maximize this threshold for anti-stereotypical evalution, if we want an anti-stereotypical model,
+#but it might be unrealistic for the real world
+INTRASENTENCE_ANTISTEREOTYPE_SCORE = 0.5 #0.999 
+INTRASENTENCE_STEREOTYPE_SCORE = 0.5 #1e-5
+INTRASENTENCE_UNRELATED_SCORE = 1e-5 #0.50
 
 class SentimentIntrasentenceLoader(object):
     def __init__(self, tokenizer, max_seq_length=None, pad_to_max_length=False, input_file="../../data/bias.json"):

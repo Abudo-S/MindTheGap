@@ -49,10 +49,10 @@ class SentenceEvaluator():
         # Set this to be none if you don't want to batch items together!
         self.max_seq_length = None if self.batch_size == 1 else MAX_SEQ_LENGTH
 
-        self.MASK_TOKEN_IDX = self.tokenizer.encode(
+        self.MASK_TOKEN_ID = self.tokenizer.encode(
             self.MASK_TOKEN, add_special_tokens=False)
-        assert len(self.MASK_TOKEN_IDX) == 1
-        self.MASK_TOKEN_IDX = self.MASK_TOKEN_IDX[0]
+        assert len(self.MASK_TOKEN_ID) == 1
+        self.MASK_TOKEN_ID = self.MASK_TOKEN_ID[0]
 
         config = AutoConfig.from_pretrained(self.model_name)
         print(f"Model max position embeddings: {config.max_position_embeddings}")
@@ -154,7 +154,7 @@ class SentenceEvaluator():
                 attention_mask = attention_mask.squeeze(1).to(self.device)
                 next_token = next_token.to(self.device) #token to predict
 
-                mask_idxs = (input_ids == self.MASK_TOKEN_IDX)
+                mask_idxs = (input_ids == self.MASK_TOKEN_ID)
 
                 # get the probabilities
                 output = model(input_ids, attention_mask=attention_mask)[0].softmax(dim=-1)

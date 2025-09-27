@@ -94,11 +94,11 @@ class ScoreEvaluator(object):
 
             # check pro vs unrelated
             if (self.id2score[pro_id] > self.id2score[unrelated_id]):
-                per_term_counts[example.target]["unrelated"] += 1.0
+                per_term_counts[example.target]["related"] += 1.0
 
             # check anti vs unrelated
             if (self.id2score[anti_id] > self.id2score[unrelated_id]):
-                per_term_counts[example.target]["unrelated"] += 1.0
+                per_term_counts[example.target]["related"] += 1.0
 
             per_term_counts[example.target]['total'] += 1.0
             #loss is averaged over all sentences in the example w.r.t. the same target word
@@ -116,7 +116,8 @@ class ScoreEvaluator(object):
         for term, scores in counts.items():
             total += scores['total']
             ss_score = 100.0 * (scores['pro'] / scores['total'])
-            lm_score = (scores['unrelated'] / (scores['total'] * 2.0)) * 100.0
+            lm_score = (scores['related'] / (scores['total'] * 2.0)) * 100.0
+            #lm_score = ((scores['pro'] + scores['anti'] + scores['related']) / (scores['total'] *2)) * 100.0
 
             lm_scores.append(lm_score)
             ss_scores.append(ss_score)

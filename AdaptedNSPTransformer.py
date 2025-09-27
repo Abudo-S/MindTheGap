@@ -9,6 +9,7 @@ from intersentence_loader import IntersentenceDataset
 import os
 
 LEARNING_RATE = 5e-5 #0.00005
+LORA_DROPOUT_REGULARIZATION = 0.1 #[default=0.1] incresed in case of overfitting, decreased in case of underfitting
 
 class AdaptedNSPTransformer(nn.Module):
     def __init__(self, model_name="roberta-base", use_adapter=False, num_labels=2):
@@ -29,7 +30,7 @@ class AdaptedNSPTransformer(nn.Module):
             r=8,  #impacts the size of matrices (d.r) in the adapter layer
             lora_alpha=16,
             target_modules=["query", "value"], #attention layers to adapt
-            lora_dropout=0.1, #regularization
+            lora_dropout=LORA_DROPOUT_REGULARIZATION, #regularization
         )
 
         #combine the configured adapter with the main model

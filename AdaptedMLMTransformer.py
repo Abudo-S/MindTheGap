@@ -9,6 +9,7 @@ from dataloader import IntrasentenceDataSet
 import os
 
 LEARNING_RATE = 5e-5 #0.00005
+LORA_DROPOUT_REGULARIZATION = 0.1 #[default=0.1] incresed in case of overfitting, decreased in case of underfitting
 
 class AdaptedMLMTransformer(nn.Module):
     def __init__(self, model_name="roberta-base", use_adapter=False):
@@ -22,13 +23,19 @@ class AdaptedMLMTransformer(nn.Module):
         self.model_name = f"adapted_{model_name}" if use_adapter else model_name
         self.use_adapter = use_adapter
         
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.MASK_TOKEN_ID = tokenizer.encode(
+            tokenizer.mask_token, add_special_tokens=False)
+        assert len(self.MASK_TOKEN_ID) == 1
+        self.MASK_TOKEN_ID = self.MASK_TOKEN_ID[0]
+
         #init adapter layer (LoRA)
         peft_config = LoraConfig(
             task_type=TaskType.FEATURE_EXTRACTION, #for MLM
             r=8, #impacts the size of matrices (d.r) in the adapter layer
             lora_alpha=16,
             target_modules=["query", "value"], #attention layers to adapt
-            lora_dropout=0.1, #regularization
+            lora_dropout=LORA_DROPOUT_REGULARIZATION, #regularization
         )
 
         #combine the configured adapter to the main model
@@ -77,12 +84,13 @@ class AdaptedMLMTransformer(nn.Module):
         #     print(f"Batch size: {len(batch[0])}")
 
         losses = []
-        for sentence_ids, _, input_ids, attention_mask, _, sentence_labels in train_loader:
+        for sentence_ids, next_token, input_ids, attention_mask, _, sentence_labels in train_loader:
             optimizer.zero_grad()
 
             input_ids = input_ids.squeeze(1).to(device)
             attention_mask = attention_mask.squeeze(1).to(device)
-
+            mask_idxs = (input_ids == self.MASK_TOKEN_ID)
+            
             outputs = None
             if self.use_adapter:
                 outputs = self.adapted_model(input_ids=input_ids,attention_mask=attention_mask)
@@ -93,10 +101,14 @@ class AdaptedMLMTransformer(nn.Module):
                 outputs = outputs.logits
             else:
                 outputs = outputs[0]
-
-            outputs = torch.softmax(outputs, dim=1)
-
-            predictions = outputs[:, 1].float().to(device)
+            
+            outputs = outputs.softmax(dim=-1)
+            #outputs_shape = outputs.shape
+            #masks_shape = mask_idxs.shape
+            outputs = outputs[mask_idxs] #target only the masked positions
+            outputs = outputs.index_select(1, next_token.to(device)).diag() #extract the probs of true tokens from the vocabulary dimension
+            
+            predictions = outputs.float().to(device)
             true_labels = sentence_labels.float().to(device)
 
             # Calculate loss and backpropagate

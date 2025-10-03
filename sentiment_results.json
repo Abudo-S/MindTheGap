@@ -1,0 +1,218 @@
+{
+  "roberta-base": {
+    "intrasentence": {
+      "gender": {
+        "Count": 117.0,
+        "Positive Score": 0.28205128205128205,
+        "Negative Score": 0.1282051282051282,
+        "Neutral Score": 0.5897435897435898
+      },
+      "profession": {
+        "Count": 366.0,
+        "Positive Score": 0.29508196721311475,
+        "Negative Score": 0.09016393442622951,
+        "Neutral Score": 0.6147540983606558
+      },
+      "race": {
+        "Count": 435.0,
+        "Positive Score": 0.30344827586206896,
+        "Negative Score": 0.2413793103448276,
+        "Neutral Score": 0.45517241379310347
+      },
+      "religion": {
+        "Count": 36.0,
+        "Positive Score": 0.4166666666666667,
+        "Negative Score": 0.16666666666666666,
+        "Neutral Score": 0.4166666666666667
+      },
+      "overall": {
+        "Count": 318.0,
+        "Positive Score": 0.3018867924528302,
+        "Negative Score": 0.16666666666666666,
+        "Neutral Score": 0.5314465408805031
+      }
+    },
+    "intersentence": {
+      "gender": {
+        "Count": 111.0,
+        "Positive Score": 0.40540540540540543,
+        "Negative Score": 0.21621621621621623,
+        "Neutral Score": 0.3783783783783784
+      },
+      "profession": {
+        "Count": 375.0,
+        "Positive Score": 0.496,
+        "Negative Score": 0.184,
+        "Neutral Score": 0.32
+      },
+      "race": {
+        "Count": 441.0,
+        "Positive Score": 0.41496598639455784,
+        "Negative Score": 0.3129251700680272,
+        "Neutral Score": 0.272108843537415
+      },
+      "religion": {
+        "Count": 36.0,
+        "Positive Score": 0.5833333333333334,
+        "Negative Score": 0.08333333333333333,
+        "Neutral Score": 0.3333333333333333
+      },
+      "overall": {
+        "Count": 321.0,
+        "Positive Score": 0.4517133956386293,
+        "Negative Score": 0.24299065420560748,
+        "Neutral Score": 0.3052959501557632
+      }
+    },
+    "overall": {
+      "Count": 639.0,
+      "Positive Score": 0.37715179968701096,
+      "Negative Score": 0.20500782472613457,
+      "Neutral Score": 0.41784037558685444
+    }
+  },
+  "adapted": {
+    "intrasentence": {
+      "gender": {
+        "Count": 117.0,
+        "Positive Score": 0.20512820512820512,
+        "Negative Score": 0.1794871794871795,
+        "Neutral Score": 0.6153846153846154
+      },
+      "profession": {
+        "Count": 366.0,
+        "Positive Score": 0.3360655737704918,
+        "Negative Score": 0.10655737704918032,
+        "Neutral Score": 0.5573770491803278
+      },
+      "race": {
+        "Count": 435.0,
+        "Positive Score": 0.2620689655172414,
+        "Negative Score": 0.2896551724137931,
+        "Neutral Score": 0.4482758620689655
+      },
+      "religion": {
+        "Count": 36.0,
+        "Positive Score": 0.3333333333333333,
+        "Negative Score": 0.25,
+        "Neutral Score": 0.4166666666666667
+      },
+      "overall": {
+        "Count": 318.0,
+        "Positive Score": 0.2861635220125786,
+        "Negative Score": 0.20440251572327045,
+        "Neutral Score": 0.5094339622641509
+      }
+    },
+    "intersentence": {
+      "gender": {
+        "Count": 111.0,
+        "Positive Score": 0.2972972972972973,
+        "Negative Score": 0.32432432432432434,
+        "Neutral Score": 0.3783783783783784
+      },
+      "profession": {
+        "Count": 375.0,
+        "Positive Score": 0.336,
+        "Negative Score": 0.28,
+        "Neutral Score": 0.384
+      },
+      "race": {
+        "Count": 441.0,
+        "Positive Score": 0.3741496598639456,
+        "Negative Score": 0.3673469387755102,
+        "Neutral Score": 0.2585034013605442
+      },
+      "religion": {
+        "Count": 36.0,
+        "Positive Score": 0.4166666666666667,
+        "Negative Score": 0.25,
+        "Neutral Score": 0.3333333333333333
+      },
+      "overall": {
+        "Count": 321.0,
+        "Positive Score": 0.35202492211838005,
+        "Negative Score": 0.32398753894080995,
+        "Neutral Score": 0.32398753894080995
+      }
+    },
+    "overall": {
+      "Count": 639.0,
+      "Positive Score": 0.3192488262910798,
+      "Negative Score": 0.2644757433489828,
+      "Neutral Score": 0.4162754303599374
+    }
+  },
+  "adapted_roberta-base": {
+    "intrasentence": {
+      "gender": {
+        "Count": 117.0,
+        "Positive Score": 0.20512820512820512,
+        "Negative Score": 0.1794871794871795,
+        "Neutral Score": 0.6153846153846154
+      },
+      "profession": {
+        "Count": 366.0,
+        "Positive Score": 0.3360655737704918,
+        "Negative Score": 0.10655737704918032,
+        "Neutral Score": 0.5573770491803278
+      },
+      "race": {
+        "Count": 435.0,
+        "Positive Score": 0.2620689655172414,
+        "Negative Score": 0.2896551724137931,
+        "Neutral Score": 0.4482758620689655
+      },
+      "religion": {
+        "Count": 36.0,
+        "Positive Score": 0.3333333333333333,
+        "Negative Score": 0.25,
+        "Neutral Score": 0.4166666666666667
+      },
+      "overall": {
+        "Count": 318.0,
+        "Positive Score": 0.2861635220125786,
+        "Negative Score": 0.20440251572327045,
+        "Neutral Score": 0.5094339622641509
+      }
+    },
+    "intersentence": {
+      "gender": {
+        "Count": 111.0,
+        "Positive Score": 0.2972972972972973,
+        "Negative Score": 0.32432432432432434,
+        "Neutral Score": 0.3783783783783784
+      },
+      "profession": {
+        "Count": 375.0,
+        "Positive Score": 0.336,
+        "Negative Score": 0.28,
+        "Neutral Score": 0.384
+      },
+      "race": {
+        "Count": 441.0,
+        "Positive Score": 0.3741496598639456,
+        "Negative Score": 0.3673469387755102,
+        "Neutral Score": 0.2585034013605442
+      },
+      "religion": {
+        "Count": 36.0,
+        "Positive Score": 0.4166666666666667,
+        "Negative Score": 0.25,
+        "Neutral Score": 0.3333333333333333
+      },
+      "overall": {
+        "Count": 321.0,
+        "Positive Score": 0.35202492211838005,
+        "Negative Score": 0.32398753894080995,
+        "Neutral Score": 0.32398753894080995
+      }
+    },
+    "overall": {
+      "Count": 639.0,
+      "Positive Score": 0.3192488262910798,
+      "Negative Score": 0.2644757433489828,
+      "Neutral Score": 0.4162754303599374
+    }
+  }
+}

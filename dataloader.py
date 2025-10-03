@@ -9,52 +9,6 @@ INTRASENTENCE_ANTISTEREOTYPE_SCORE = 0.5 #0.999
 INTRASENTENCE_STEREOTYPE_SCORE = 0.5 #1e-5
 INTRASENTENCE_UNRELATED_SCORE = 1e-5 #0.50
 
-class SentimentIntrasentenceLoader(object):
-    def __init__(self, tokenizer, max_seq_length=None, pad_to_max_length=False, input_file="../../data/bias.json"):
-        stereoset = StereoSet(input_file)
-        clusters = stereoset.get_intrasentence_examples()
-        self.tokenizer = tokenizer
-        self.sentences = []
-        self.MASK_TOKEN = self.tokenizer.mask_token
-        self.max_seq_length = max_seq_length
-        self.pad_to_max_length = pad_to_max_length
-
-        if tokenizer.__class__.__name__=="XLNetTokenizer":
-            self.prepend_text = """In 1991, the remains of Russian Tsar Nicholas II and his family
-            (except for Alexei and Maria) are discovered.
-            The voice of Nicholas's young son, Tsarevich Alexei Nikolaevich, narrates the
-            remainder of the story. 1883 Western Siberia,
-            a young Grigori Rasputin is asked by his father and a group of men to perform magic.
-            Rasputin has a vision and denounces one of the men as a horse thief. Although his
-            father initially slaps him for making such an accusation, Rasputin watches as the
-            man is chased outside and beaten. Twenty years later, Rasputin sees a vision of
-            the Virgin Mary, prompting him to become a priest. Rasputin quickly becomes famous,
-            with people, even a bishop, begging for his blessing. <eod> """
-
-        for cluster in clusters:
-            for sentence in cluster.sentences:
-                new_sentence = cluster.context.replace("BLANK", sentence.template_word)
-                self.sentences.append((new_sentence, sentence.ID))
-
-    def __len__(self):
-        return len(self.sentences)  
-
-    def __getitem__(self, idx):
-        sentence, sentence_id = self.sentences[idx]
-        if self.tokenizer.__class__.__name__=="XLNetTokenizer":
-            text = self.prepend_text
-            text_pair = sentence
-        else:
-            text = sentence
-            text_pair = None
-        tokens_dict = self.tokenizer.encode_plus(text, text_pair=text_pair, add_special_tokens=True, max_length=self.max_seq_length, \
-            pad_to_max_length=self.pad_to_max_length, return_token_type_ids=True, return_attention_mask=True, \
-            return_overflowing_tokens=False, return_special_tokens_mask=False, return_tensors="pt")
-        input_ids = tokens_dict['input_ids']
-        attention_mask = tokens_dict['attention_mask']
-        token_type_ids = tokens_dict['token_type_ids']
-        return sentence_id, input_ids, attention_mask, token_type_ids 
-
 class IntrasentenceDataSet(object):
     def __init__(self, tokenizer, max_seq_length=None, pad_to_max_length=False, examples=list(), input_file=None):
         clusters = None

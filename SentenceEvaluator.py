@@ -63,16 +63,34 @@ class SentenceEvaluator():
     def _split_datasets(self):
         '''
         Reproducible split of dataset into train and test sets for both intersentences and
-        intrasentences.
+        intrasentences w.r.t. bias domains.
         '''
         
         #intrasentences split
         if self.intra_train_dataset is None or self.intra_test_dataset is None:
             intra_examples = dataloader.StereoSet(self.input_file).get_intrasentence_examples()
             gen = torch.Generator().manual_seed(41)
-            training_size = int(TRAINING_SET_SIZE_PERCENT * len(intra_examples))
-            test_size = len(intra_examples) - training_size
-            train_examples, test_examples = random_split(intra_examples, [training_size, test_size], generator=gen)
+            
+            train_examples = []
+            test_examples = []
+            bias_types = defaultdict(list)
+            for example in intra_examples:
+                bias_types[example.bias_type].append(example)
+
+            for bias_type_examples in bias_types.values():
+                domain_size = len(bias_type_examples)
+                training_size = int(TRAINING_SET_SIZE_PERCENT * domain_size)
+                test_size = domain_size - training_size
+                
+                domain_train_subset, domain_test_subset = random_split(
+                    bias_type_examples, 
+                    [training_size, test_size], 
+                    generator=gen
+                )
+                
+                #append domain-specific examples
+                train_examples.extend(domain_train_subset)
+                test_examples.extend(domain_test_subset)
 
             train_dataset = dataloader.IntrasentenceDataSet(self.tokenizer, max_seq_length=self.max_seq_length,
                                                     pad_to_max_length='max_length',
@@ -92,9 +110,27 @@ class SentenceEvaluator():
         if self.inter_train_dataset is None or self.inter_test_dataset is None:
             inter_examples = dataloader.StereoSet(self.input_file).get_intersentence_examples()
             gen = torch.Generator().manual_seed(41)
-            training_size = int(TRAINING_SET_SIZE_PERCENT * len(inter_examples))
-            test_size = len(inter_examples) - training_size
-            train_examples, test_examples = random_split(inter_examples, [training_size, test_size], generator=gen)
+            
+            train_examples = []
+            test_examples = []
+            bias_types = defaultdict(list)
+            for example in inter_examples:
+                bias_types[example.bias_type].append(example)
+
+            for bias_type_examples in bias_types.values():
+                domain_size = len(bias_type_examples)
+                training_size = int(TRAINING_SET_SIZE_PERCENT * domain_size)
+                test_size = domain_size - training_size
+                
+                domain_train_subset, domain_test_subset = random_split(
+                    bias_type_examples, 
+                    [training_size, test_size], 
+                    generator=gen
+                )
+                
+                #append domain-specific examples
+                train_examples.extend(domain_train_subset)
+                test_examples.extend(domain_test_subset)
 
             train_dataset = IntersentenceDataset(self.tokenizer, max_seq_length=self.max_seq_length,
                                                     examples=train_examples)

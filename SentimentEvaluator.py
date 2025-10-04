@@ -14,7 +14,7 @@ from textblob import TextBlob
 # print(f'polarity score 1: {get_polarity_score(text)}')
 # print(f'polarity score 2: {get_polarity_score(text2)}')
 
-NEUTRAL_POLARITY_THRESHOLD = 0.01
+NEUTRAL_POLARITY_THRESHOLD = 0.05
 
 class SentimentEvaluator(object):
     def __init__(self, gold_file_path, predictions=None, predictions_file_path="data/stereo_dataset.json"):

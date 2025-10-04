@@ -41,14 +41,14 @@
       },
       "profession": {
         "Count": 375.0,
-        "Positive Score": 0.496,
-        "Negative Score": 0.184,
+        "Positive Score": 0.504,
+        "Negative Score": 0.176,
         "Neutral Score": 0.32
       },
       "race": {
         "Count": 441.0,
-        "Positive Score": 0.41496598639455784,
-        "Negative Score": 0.3129251700680272,
+        "Positive Score": 0.42857142857142855,
+        "Negative Score": 0.29931972789115646,
         "Neutral Score": 0.272108843537415
       },
       "religion": {
@@ -59,15 +59,15 @@
       },
       "overall": {
         "Count": 321.0,
-        "Positive Score": 0.4517133956386293,
-        "Negative Score": 0.24299065420560748,
+        "Positive Score": 0.46105919003115264,
+        "Negative Score": 0.2336448598130841,
         "Neutral Score": 0.3052959501557632
       }
     },
     "overall": {
       "Count": 639.0,
-      "Positive Score": 0.37715179968701096,
-      "Negative Score": 0.20500782472613457,
+      "Positive Score": 0.38184663536776214,
+      "Negative Score": 0.20031298904538342,
       "Neutral Score": 0.41784037558685444
     }
   },
@@ -159,60 +159,60 @@
       },
       "race": {
         "Count": 435.0,
-        "Positive Score": 0.2620689655172414,
+        "Positive Score": 0.23448275862068965,
         "Negative Score": 0.2896551724137931,
-        "Neutral Score": 0.4482758620689655
+        "Neutral Score": 0.47586206896551725
       },
       "religion": {
         "Count": 36.0,
         "Positive Score": 0.3333333333333333,
-        "Negative Score": 0.25,
-        "Neutral Score": 0.4166666666666667
+        "Negative Score": 0.08333333333333333,
+        "Neutral Score": 0.5833333333333334
       },
       "overall": {
         "Count": 318.0,
-        "Positive Score": 0.2861635220125786,
-        "Negative Score": 0.20440251572327045,
-        "Neutral Score": 0.5094339622641509
+        "Positive Score": 0.27358490566037735,
+        "Negative Score": 0.19811320754716982,
+        "Neutral Score": 0.5283018867924528
       }
     },
     "intersentence": {
       "gender": {
         "Count": 111.0,
-        "Positive Score": 0.2972972972972973,
-        "Negative Score": 0.32432432432432434,
+        "Positive Score": 0.3783783783783784,
+        "Negative Score": 0.24324324324324326,
         "Neutral Score": 0.3783783783783784
       },
       "profession": {
         "Count": 375.0,
-        "Positive Score": 0.336,
-        "Negative Score": 0.28,
-        "Neutral Score": 0.384
+        "Positive Score": 0.408,
+        "Negative Score": 0.216,
+        "Neutral Score": 0.376
       },
       "race": {
         "Count": 441.0,
         "Positive Score": 0.3741496598639456,
-        "Negative Score": 0.3673469387755102,
-        "Neutral Score": 0.2585034013605442
+        "Negative Score": 0.3401360544217687,
+        "Neutral Score": 0.2857142857142857
       },
       "religion": {
         "Count": 36.0,
-        "Positive Score": 0.4166666666666667,
-        "Negative Score": 0.25,
+        "Positive Score": 0.5833333333333334,
+        "Negative Score": 0.08333333333333333,
         "Neutral Score": 0.3333333333333333
       },
       "overall": {
         "Count": 321.0,
-        "Positive Score": 0.35202492211838005,
-        "Negative Score": 0.32398753894080995,
-        "Neutral Score": 0.32398753894080995
+        "Positive Score": 0.3956386292834891,
+        "Negative Score": 0.27102803738317754,
+        "Neutral Score": 0.3333333333333333
       }
     },
     "overall": {
       "Count": 639.0,
-      "Positive Score": 0.3192488262910798,
-      "Negative Score": 0.2644757433489828,
-      "Neutral Score": 0.4162754303599374
+      "Positive Score": 0.3348982785602504,
+      "Negative Score": 0.2347417840375587,
+      "Neutral Score": 0.4303599374021909
     }
   }
 }

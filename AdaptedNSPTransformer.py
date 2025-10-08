@@ -40,6 +40,12 @@ class AdaptedNSPTransformer(nn.Module):
         if self.use_adapter:
             print("Trainable parameters in the NSP adapted model:")
             self.adapted_model.print_trainable_parameters()
+            #print([(name, param.requires_grad) for name, param in self.model.classifier.named_parameters()])
+           
+            # #unfreeze the classification head parameters to be trained
+            # for name, param in self.adapted_model.classifier.named_parameters():
+            #     #if "original_module" not in name:
+            #     param.requires_grad = True
         else:
             #freeze pre-trained transformer parameters since we only want to train only the NSP head
             #they won't be updated during backpropagation
@@ -47,8 +53,9 @@ class AdaptedNSPTransformer(nn.Module):
                 param.requires_grad = False
             
             #unfreeze the classification head parameters to be trained
-            for param in self.model.classifier.parameters():
-                param.requires_grad = True
+            for name, param in self.model.classifier.named_parameters():
+                if "original_module" not in name:
+                    param.requires_grad = True
         
     def forward(self, input_ids, attention_mask):
         """

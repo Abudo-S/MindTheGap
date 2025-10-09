@@ -9,8 +9,8 @@ from sklearn.preprocessing import LabelEncoder
 #thresholds used to label intersentences
 #maximize this threshold for anti-stereotypical evalution, if we want an anti-stereotypical model,
 #but it might be unrealistic for the real world
-INTERSENTENCE_ANTISTEREOTYPE_SCORE = 0.5 #0.999 
-INTERSENTENCE_STEREOTYPE_SCORE = 0.5 #1e-5
+INTERSENTENCE_ANTISTEREOTYPE_SCORE = 0.60 #0.999 
+INTERSENTENCE_STEREOTYPE_SCORE = 0.40 #1e-5
 INTERSENTENCE_UNRELATED_SCORE = 1e-5 #0.50
 
 class IntersentenceDataset(Dataset):
